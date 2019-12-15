@@ -14,17 +14,29 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet var singleTap: UITapGestureRecognizer!
+
     
-    var cards: [String] = ["il trasloco", "traslocare", "trasferirsi", "noioso", "su", "giù", "sopra", "sotto"]
-//    var images: [String] = ["0", "1", "2"]
+    var cardsItalian: [String] = ["il trasloco", "traslocare", "trasferirsi", "noioso", "su", "giù", "sopra", "sotto"]
+    var cardsGerman: [String] = ["Umzug", "umziehen (in eine andere Wohnung)", "umziehen (in andere Stadt)", "langweilig", "(nach) oben", "(nach) unten", "über, auf", "unter"]
     
     var frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+    
+    var cardTapped = false
+    
+    @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
+//        if cardTapped {
+//            cardTapped = false
+//        } else {
+//            cardTapped = true
+//        }
+        print(cardTapped)
+       }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        pageControl.numberOfPages = cards.count
-        for index in 0..<cards.count {
+        pageControl.numberOfPages = cardsItalian.count
+        for index in 0..<cardsItalian.count {
             frame.origin.x = scrollView.frame.size.width * CGFloat(index)
             frame.size = scrollView.frame.size
             
@@ -32,23 +44,42 @@ class ViewController: UIViewController, UIScrollViewDelegate {
 //            imgView.image = UIImage(named: images[index])
 //            self.scrollView.addSubview(imgView)
            
-            let label = UILabel(frame: frame)
-            label.text = cards[index]
-            label.textAlignment = .center
-            label.font = .systemFont(ofSize: 25)
-            self.scrollView.addSubview(label)
+            let vocabularyLabel = UILabel(frame: frame)
             
+//            if cardTapped == true {
+//                label.text = cardsGerman[index]
+//            } else {
+//                label.text = cardsItalian[index]
+//            }
+            
+            vocabularyLabel.text = cardsItalian[index]
+            vocabularyLabel.textAlignment = .center
+            vocabularyLabel.font = .systemFont(ofSize: 25)
+//            if cardTapped == true {
+//                label.text = cardsGerman[index]
+//            }
+            self.scrollView.addSubview(vocabularyLabel)
+            
+            scrollView.addGestureRecognizer(singleTap)
+    
+            func handleTap(sender: UITapGestureRecognizer) {
+                singleTap.numberOfTouchesRequired = 1
+                if singleTap.state == .ended {
+                    vocabularyLabel.text = cardsGerman [index]
+                }
+            }
+        
+            handleTap(sender: singleTap)
+        
         }
         
-        scrollView.contentSize = CGSize(width: (scrollView.frame.size.width * CGFloat(cards.count)), height: scrollView.frame.size.height)
+        scrollView.contentSize = CGSize(width: (scrollView.frame.size.width * CGFloat(cardsItalian.count)), height: scrollView.frame.size.height)
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.addGestureRecognizer(singleTap)
-        
-//        scrollView.frameLayoutGuide =
-        
+
     }
 
+    
 //    Scrollview Method
 //    ================================
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -56,12 +87,5 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         pageControl.currentPage = Int(pageNumber)
     }
     
-
-//    TapAction Function
-//    ===============================
-    
-    @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
-        print("Hello world!")
-    }
 }
 
