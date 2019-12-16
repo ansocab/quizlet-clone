@@ -8,21 +8,24 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIScrollViewDelegate {
+class ViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UIPageViewControllerDelegate {
 
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet var singleTap: UITapGestureRecognizer!
-
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    
+    
+//    SCROLL VIEW
+//    ================================
     
     var cardsItalian: [String] = ["il trasloco", "traslocare", "trasferirsi", "noioso", "su", "giù", "sopra", "sotto"]
     var cardsGerman: [String] = ["Umzug", "umziehen", "umziehen (in andere Stadt)", "langweilig", "(nach) oben", "(nach) unten", "über, auf", "unter"]
     
     var frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-    
-    var cardTapped = false
-    
+        
     var vocabularyLabel : [UILabel] = []
     
     @IBAction func tapAction(_ sender: UITapGestureRecognizer) {
@@ -33,6 +36,23 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         }
        }
     
+    
+//    PAGE CONTROL
+//    ==================================
+    
+    @IBAction func pageControlClicked(_ sender: UIPageControl) {
+    }
+    
+//    COLLECTION VIEW
+//    ================================
+    
+    let exerciseLabels = ["Lernen", "Karteikarten", "Antworten", "Testen"]
+    let exerciseImage = [UIImage(named: "lernen"), UIImage(named: "karteikarten"), UIImage(named: "antworten"), UIImage(named: "testen")]
+   
+    
+//    VIEW DID LOAD
+//    ================================
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,10 +61,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         for index in 0..<cardsItalian.count {
             frame.origin.x = scrollView.frame.size.width * CGFloat(index)
             frame.size = scrollView.frame.size
-            
-//            let imgView = UIImageView(frame: frame)
-//            imgView.image = UIImage(named: images[index])
-//            self.scrollView.addSubview(imgView)
             
             vocabularyLabel.append(UILabel(frame: frame))
             
@@ -61,9 +77,18 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         scrollView.contentSize = CGSize(width: (scrollView.frame.size.width * CGFloat(cardsItalian.count)), height: scrollView.frame.size.height)
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
-
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        setupCardUI()
     }
 
+    func setupCardUI() {
+        scrollView.layer.shadowRadius = 5
+        scrollView.layer.shadowOpacity = 0.5
+        scrollView.layer.masksToBounds = false
+        scrollView.layer.shadowColor = UIColor.gray.cgColor
+    }
     
 //    Scrollview Method
 //    ================================
@@ -71,6 +96,27 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         let pageNumber = scrollView.contentOffset.x / scrollView.frame.size.width
         pageControl.currentPage = Int(pageNumber)
     }
+ 
     
+//    Collection View Methods
+//    ================================
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return exerciseLabels.count
+    }
+        
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
+        let cellIndex = indexPath.item
+                
+        cell.iconImageView.image = exerciseImage[cellIndex]
+        cell.exerciseTypeLabel.text = exerciseLabels[cellIndex]
+        
+        return cell
+    }
+        
 }
 
