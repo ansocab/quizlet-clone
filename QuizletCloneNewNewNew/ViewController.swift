@@ -46,7 +46,7 @@ class ViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDe
 //    COLLECTION VIEW
 //    ================================
     
-    let exerciseLabels = ["Lernen", "Karteikarten", "Antworten", "Testen"]
+    var exerciseLabels = ["LERNEN", "KARTEIKARTEN", "ANTWORTEN", "TESTEN"]
     let exerciseImage = [UIImage(named: "lernen"), UIImage(named: "karteikarten"), UIImage(named: "antworten"), UIImage(named: "testen")]
    
     
@@ -55,7 +55,6 @@ class ViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         pageControl.numberOfPages = cardsItalian.count
         
         for index in 0..<cardsItalian.count {
@@ -67,6 +66,9 @@ class ViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDe
             vocabularyLabel[index].text = cardsItalian[index]
             vocabularyLabel[index].textAlignment = .center
             vocabularyLabel[index].font = .systemFont(ofSize: 25)
+            vocabularyLabel[index].layer.borderColor = UIColor.lightGray.cgColor
+            vocabularyLabel[index].layer.borderWidth = 0.75
+            vocabularyLabel[index].layer.backgroundColor = UIColor.white.cgColor
             
             self.scrollView.addSubview(vocabularyLabel[index])
             
@@ -111,12 +113,18 @@ class ViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
         let cellIndex = indexPath.item
-                
+        cell.contentView.layer.masksToBounds = true
         cell.iconImageView.image = exerciseImage[cellIndex]
         cell.exerciseTypeLabel.text = exerciseLabels[cellIndex]
+        cell.layer.borderColor = UIColor.white.cgColor
+        cell.layer.borderWidth = 0.75
+        cell.layer.masksToBounds = false
+        cell.layer.shadowRadius = 5
+        cell.layer.shadowOpacity = 0.2
+        cell.layer.backgroundColor = UIColor.white.cgColor
         
         return cell
+        
     }
         
 }
-
