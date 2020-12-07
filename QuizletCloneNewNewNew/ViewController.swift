@@ -124,7 +124,6 @@ class ViewController: UIViewController, UIScrollViewDelegate, UICollectionViewDe
         cell.layer.backgroundColor = UIColor.white.cgColor
         
         return cell
-        
     }
         
 }
